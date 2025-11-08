@@ -57,3 +57,23 @@ pip install flask
 ```python
 python app.py
 ```
+### 해설
+```
+# Delete a question 
+@app.route("/qna/delete/<int:post_id>", methods=["GET", "POST"]) # Allow GET requests
+@login_required
+def delete_question(post_id):
+    global qna
+    qna = [p for p in qna if p["id"] != post_id] # <-- 2. 인가(Authorization) 없음
+    flash(f"게시글 {post_id} 삭제됨.", "info")
+    return redirect(url_for("qna_page", product_id=1))
+```
+**delete_question 함수에 취약점이 존재 합니다.**
+1. `GET` 요청을 허용합니다. 즉, 주소창 입력으로도 '삭제'가 가능합니다.
+2. 로그인한 사용자가 이 게시글의 작성자인지 여부를 확인하지 않습니다.
+
+**워게임의 목표는 기본 작성자 WUISP의 게시글을 삭제하는 것입니다.**
+1. 사이트에 로그인 후 Q&A 게시판이 들어갑니다.
+2. 현재 주소의 마지막 부분을`/qna/delete/0`으로 바꿔서 입력합니다.
+3. "게시글 0 삭제됨" 이라는 메시지와 함께"WUISP"의 게시글이 삭제된 것을 볼 수 있습니다.
+
