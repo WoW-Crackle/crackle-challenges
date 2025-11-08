@@ -1,0 +1,10 @@
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/secret')
+def secret():
+    return " 성공적으로 비밀 서비스에 접근했습니다! "
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001)
